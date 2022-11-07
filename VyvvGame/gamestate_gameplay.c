@@ -18,11 +18,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include "gamestate_credits.h"
+#pragma warning(disable:4996)
 CP_Color bgColor;
 CP_Color groundColor;
 float globalXOffset = 0;
 float globalYOffset = 0;
-
 
 struct Knife
 {
@@ -33,7 +33,6 @@ struct Knife
 	float knifeX2Spawn;
 	float knifeY2Spawn;
 };
-
 struct Box
 {
 	CP_Vector bottomRightCorner;
@@ -75,6 +74,7 @@ struct Arrow
 	CP_Vector velocity;
 	float gravity;
 };
+
 struct Box enviornment[20];
 struct Player player1, player2;
 
@@ -205,69 +205,6 @@ void PlayerCollisions(struct Player *player)
 	}
 }
 
-struct Box TestBox, TestBox2, TestBox3, TestBox4, TestBox5, TestBox6, TestBox7, TestBox8;
-
-void generateBoxes(void)
-{
-	//make janky box to test if thing works
-	TestBox.globalTopLeftCorner.x = 300;
-	TestBox.globalTopLeftCorner.y = 525;
-	TestBox.globalBottomRightCorner.y = 700;
-	TestBox.globalBottomRightCorner.x = 500;
-	TestBox.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox2.globalTopLeftCorner.x = -30;
-	TestBox2.globalTopLeftCorner.y = 550;
-	TestBox2.globalBottomRightCorner.y = 700;
-	TestBox2.globalBottomRightCorner.x = 200;
-	TestBox2.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox3.globalTopLeftCorner.x = 700;
-	TestBox3.globalTopLeftCorner.y = 515;
-	TestBox3.globalBottomRightCorner.y = 700;
-	TestBox3.globalBottomRightCorner.x = 900;
-	TestBox3.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox4.globalTopLeftCorner.x = 620;
-	TestBox4.globalTopLeftCorner.y = 545;
-	TestBox4.globalBottomRightCorner.y = 700;
-	TestBox4.globalBottomRightCorner.x = 900;
-	TestBox4.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox5.globalTopLeftCorner.x = 350;
-	TestBox5.globalTopLeftCorner.y = 490;
-	TestBox5.globalBottomRightCorner.y = 700;
-	TestBox5.globalBottomRightCorner.x = 475;
-	TestBox5.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox6.globalTopLeftCorner.x = 520;
-	TestBox6.globalTopLeftCorner.y = 490;
-	TestBox6.globalBottomRightCorner.y = 530;
-	TestBox6.globalBottomRightCorner.x = 600;
-	TestBox6.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox7.globalTopLeftCorner.x = 575;
-	TestBox7.globalTopLeftCorner.y = 450;
-	TestBox7.globalBottomRightCorner.y = 490;
-	TestBox7.globalBottomRightCorner.x = 675;
-	TestBox7.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	TestBox8.globalTopLeftCorner.x = -30;
-	TestBox8.globalTopLeftCorner.y = 580;
-	TestBox8.globalBottomRightCorner.y = 700;
-	TestBox8.globalBottomRightCorner.x = 800;
-	TestBox8.boxColor = CP_Color_Create(255, 255, 255, 255);
-
-	enviornment[0] = TestBox;
-	enviornment[1] = TestBox2;
-	enviornment[2] = TestBox3;
-	enviornment[3] = TestBox4;
-	enviornment[4] = TestBox5;
-	enviornment[5] = TestBox6;
-	enviornment[6] = TestBox7;
-	enviornment[7] = TestBox8;
-}
-
 void InitializePlayer(struct Player *player)
 {
 	player->currentWorldOffset.x = 0;
@@ -341,7 +278,6 @@ void PlayerInput(void)
 		SpawnProjectile(&player1, &arrow1);
 	}
 }
-
 void PlayerInput2(void)
 {
 	if (CP_Input_KeyDown(KEY_UP) && player2.hasJump == 1)
@@ -467,33 +403,6 @@ BOOLEAN knifePickedUp1 = FALSE;
 BOOLEAN knifePickedUp2 = FALSE;
 BOOLEAN knifePickupSpawn = TRUE;
 
-void drawTestKnifePowerUp(struct Player* player, struct Knife* knife)
-{
-	knife->knifeXSpawn = 560;
-	knife->knifeYSpawn = 400;
-	knife->knifeX2Spawn = 100;
-	knife->knifeY2Spawn = 450;
-
-	if (knifePickupSpawn == TRUE)
-	{
-		CP_Graphics_DrawCircle(knife->knifeXSpawn, knife->knifeYSpawn, 30);
-		CP_Graphics_DrawCircle(knife->knifeX2Spawn, knife->knifeY2Spawn, 30);
-
-		// broad phase collision detection
-		if (powerUpRadius > sqrt((player1.playerX - knife->knifeXSpawn) * (player1.playerX - knife->knifeXSpawn)) + (player1.playerY - knife->knifeYSpawn) * (player1.playerY - knife->knifeYSpawn))
-		{
-			knifePickedUp1 = TRUE;
-			knifePickupSpawn = FALSE;
-		}
-
-		if (powerUpRadius > sqrt((player2.playerX - knife->knifeX2Spawn) * (player2.playerX - knife->knifeX2Spawn)) + (player2.playerY - knife->knifeY2Spawn) * (player2.playerY - knife->knifeY2Spawn))
-		{
-			knifePickedUp2 = TRUE;
-			knifePickupSpawn = FALSE;
-		}
-	}
-}
-
 void drawKnife(struct Player* player, struct Knife* knife)
 {
 
@@ -531,10 +440,109 @@ void drawKnife(struct Player* player, struct Knife* knife)
 	}
 }
 
+struct Box TestBox;
+void LoadLevelData(char levelName[20])
+{
+	TestBox.globalTopLeftCorner.x = 0;
+	TestBox.globalTopLeftCorner.y = 0;
+	TestBox.globalBottomRightCorner.y = 0;
+	TestBox.globalBottomRightCorner.x = 0;
+	TestBox.boxColor = CP_Color_Create(255, 255, 255, 255);
+	for (int i = 0; i < 20; i++)
+	{
+		enviornment[i] = TestBox;
+	}
+	FILE* levelFile = fopen(levelName, "r");
+	float tempNum = 0;
+	if (levelFile == NULL)
+	{
+		TestBox.globalTopLeftCorner.x = 600;
+		TestBox.globalTopLeftCorner.y = 525;
+		TestBox.globalBottomRightCorner.y = 700;
+		TestBox.globalBottomRightCorner.x = 800;
+		TestBox.boxColor = CP_Color_Create(255, 255, 255, 255);
+		enviornment[0] = TestBox;
+		return;
+	}
+
+	int numOfLoops = 0;
+	int envNum = 0;
+	int playerSpawnRead = 0;
+	//read file data and add to enviornment array
+	while (!feof(levelFile))
+	{
+		if (playerSpawnRead == 0)
+		{
+			fscanf(levelFile, "%f", &tempNum);
+			if (numOfLoops == 0)
+			{
+				player1.playerX = tempNum;
+				numOfLoops += 1;
+			}
+			else if (numOfLoops == 1)
+			{
+				player1.playerY = tempNum;
+				numOfLoops += 1;
+			}
+			else if (numOfLoops == 2)
+			{
+				player2.playerX = tempNum;
+				numOfLoops += 1;
+			}
+			else if (numOfLoops == 3)
+			{
+				player1.playerY = tempNum;
+				numOfLoops += 1;
+			}
+			else if (numOfLoops == 4)
+			{
+				numOfLoops = 0;
+				playerSpawnRead = 1;
+			}
+		}
+		else
+		{
+			while (numOfLoops != 5)
+			{
+				fscanf(levelFile, "%f", &tempNum);
+				if (numOfLoops == 0)
+				{
+					enviornment[envNum].topLeftCorner.x = tempNum;
+					numOfLoops += 1;
+				}
+				else if (numOfLoops == 1)
+				{
+					enviornment[envNum].topLeftCorner.y = tempNum;
+					numOfLoops += 1;
+				}
+				else if (numOfLoops == 2)
+				{
+					enviornment[envNum].bottomRightCorner.x = tempNum;
+					numOfLoops += 1;
+				}
+				else if (numOfLoops == 3)
+				{
+					enviornment[envNum].bottomRightCorner.y = tempNum;
+					numOfLoops += 1;
+				}
+				else if (numOfLoops == 4)
+				{
+					envNum += 1;
+					numOfLoops = 5;
+				}
+			}
+			enviornment[envNum].boxColor = CP_Color_Create(255, 255, 255, 255);
+			numOfLoops = 0;
+		}
+	}
+
+	fclose(levelFile);
+}
+
 
 void gamestate_gameplay_init(void)
 {
-	generateBoxes();
+	//generateBoxes();
 	InitializePlayer(&player1);
 	InitializePlayer(&player2);
 	player1.fillColor = CP_Color_Create(120, 120, 255, 255);
@@ -547,12 +555,13 @@ void gamestate_gameplay_init(void)
 	bgColor = CP_Color_Create(160, 160, 250, 255);
 	groundColor = CP_Color_Create(100, 100, 100, 255);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
+	LoadLevelData("level_Arena.txt");
 }
 
 void gamestate_gameplay_update(void)
 {
-	TestMoveCamera();
-	ApplyTransformations();
+	//TestMoveCamera();
+	//ApplyTransformations();
 	DrawEnviornment();
 	Physics(&player2);
 	Physics(&player1);
@@ -561,22 +570,17 @@ void gamestate_gameplay_update(void)
 	PlayerInput2();
 	DrawPlayer(player2);
 	DrawPlayer(player1);
-	drawTestKnifePowerUp(&player1, &knife1);
-	drawTestKnifePowerUp(&player2, &knife2);
-	if (knifePickedUp1 == TRUE)
-	{
-		drawKnife(&player1, &knife1);
-	}
+	//drawKnife(&player1, &knife1);
+	//drawKnife(&player2, &knife2);
 
-	if (knifePickedUp2 == TRUE)
-	{
-		drawKnife(&player2, &knife2);
-	}
-
-	DrawDebugText();
+	//DrawDebugText();
 	if (CP_Input_KeyTriggered(KEY_R))
 	{
 		CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
+	}
+	if (CP_Input_KeyTriggered(KEY_F))
+	{
+		LoadLevelData("level2.txt");
 	}
 }
 
