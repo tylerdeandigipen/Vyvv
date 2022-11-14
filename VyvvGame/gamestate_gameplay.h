@@ -234,7 +234,7 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 {
 	arrow->position.x = player->playerX;
 	arrow->position.y = player->playerY;
-	arrow->velocity.x = 20 * player->facingDirection;
+	arrow->velocity.x = 20 * player->facingDirection + player->playerVelocity.x;
 	arrow->velocity.y = -15;
 	arrow->gravity = 2;
 }
@@ -339,7 +339,7 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow)
 }
 inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2)
 {
-	int currentLevelsImplemented = 1;
+	int currentLevelsImplemented = 2;
 	int levelNum = rand() % currentLevelsImplemented;
 	int powerUpNum = (rand() % 3) + 1;
 	player1->currentPowerup = powerUpNum;
