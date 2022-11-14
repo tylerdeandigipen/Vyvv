@@ -205,36 +205,37 @@ void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* 
 
 	fclose(levelFile);
 }
-int isSeeded = 0;
+
 void gamestate_gameplay_init(void)
 {
-	if (isSeeded == 0)
-	{
-		srand(1);
-		isSeeded = 1;
-	}
-	InitializePlayer(&player1);
-	InitializePlayer(&player2);
+	srand(1);
+	bgColor = CP_Color_Create(160, 160, 250, 255);
+	//reset deaths
+	player1.deaths = 0;
+	player1.isDead = 0;
+	player2.deaths = 0;
+	player2.isDead = 0;
+
+	//set player colors
 	player1.fillColor = CP_Color_Create(120, 120, 255, 255);
 	player1.lineColor = CP_Color_Create(60, 60, 200, 255);
 	player2.lineColor = CP_Color_Create(255, 120, 0, 255);
 	player2.fillColor = CP_Color_Create(255, 180, 100, 255);
-
 	//init player kebinds
 	player1.left = KEY_A;
 	player1.right = KEY_D;
 	player1.jump = KEY_W;
 	player1.attack = KEY_E;
-
+	
 	player2.left = KEY_LEFT;
 	player2.right = KEY_RIGHT;
 	player2.jump = KEY_UP;
 	player2.attack = KEY_DOWN;
 
-	player1.currentPowerup = 1;
+	InitializePlayer(&player1);
+	InitializePlayer(&player2);
 	globalXOffset = 0;
 	globalYOffset = 0;
-	bgColor = CP_Color_Create(160, 160, 250, 255);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	RandomizeLevelAndPowerup(levels, &player1, &player2);
 }
@@ -251,16 +252,23 @@ void gamestate_gameplay_update(void)
 	DrawPlayer(player1);
 	//drawKnife(&player1, &knife1);
 	//drawKnife(&player2, &knife2);
+	DisplayWins(&player1, &player2);
+	LevelManager(levels, &player1, &player2);
 
 	//DrawDebugText();
+	if (CP_Input_KeyDown(KEY_F))
+	{
+		player1.isDead = 1;
+	}
+	if (CP_Input_KeyDown(KEY_G))
+	{
+		player2.isDead = 1;
+	}
 	if (CP_Input_KeyTriggered(KEY_R))
 	{
 		CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
 	}
-	if (CP_Input_KeyTriggered(KEY_F))
-	{
-		LoadLevelData("level2.txt", &player1, &player2);
-	}
+
 }
 
 void gamestate_gameplay_exit(void)

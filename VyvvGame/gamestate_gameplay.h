@@ -37,6 +37,8 @@ struct Box
 };
 struct Player
 {
+	int isDead;
+	int deaths;
 	float playerX;
 	float playerY;
 	CP_Vector playerVelocity;
@@ -343,4 +345,42 @@ inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1
 	player1->currentPowerup = powerUpNum;
 	player2->currentPowerup = powerUpNum;
 	LoadLevelData(levels[levelNum], player1, player2);
+}
+inline void DisplayWins(struct Player* player1, struct Player* player2)
+{
+	CP_Settings_Fill(CP_Color_Create(200, 200, 200, 255));
+	CP_Settings_TextSize(20.0f);
+	char buffer[500] = { 0 };
+	sprintf_s(buffer, _countof(buffer), "Blue Wins: %i", player2->deaths);
+	CP_Font_DrawText(buffer, 1, 15);
+	sprintf_s(buffer, _countof(buffer), "Orange Wins: %i", player1->deaths);
+	CP_Font_DrawText(buffer, 1, 35);
+};
+inline void LevelManager(char levels[20][20], struct Player* player1, struct Player* player2)
+{
+	if (player1->isDead == 1 || player2->isDead == 1)
+	{
+		int winThreshold = 10;
+		if (player1->isDead == 1)
+		{
+			player1->deaths += 1;
+			player1->isDead = 0;
+			if (player1->deaths >= winThreshold)
+			{
+				//player 2 wins
+				CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
+			}
+		}
+		if (player2->isDead == 1)
+		{
+			player2->deaths += 1;
+			player2->isDead = 0;
+			if (player2->deaths >= winThreshold)
+			{
+				//player 1 wins
+				CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
+			}
+		}
+		RandomizeLevelAndPowerup(levels, player1, player2);
+	}
 }
