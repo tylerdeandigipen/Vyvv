@@ -60,6 +60,13 @@ struct Player
 	CP_Color lineColor;
 	CP_Color fillColor;
 	float facingDirection;
+	int currentPowerup;
+
+	//keybinds
+	CP_KEY left;
+	CP_KEY right;
+	CP_KEY jump;
+	CP_KEY attack;
 };
 struct Arrow
 {
@@ -70,6 +77,7 @@ struct Arrow
 void gamestate_gameplay_init(void);
 void gamestate_gameplay_update(void);
 void gamestate_gameplay_exit(void);
+void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* playerTwo);
 inline void PlayerCollisions(struct Player* player, struct Box enviornment[20])
 {
 	player->previousDistance = 1000;
@@ -218,6 +226,7 @@ inline void InitializePlayer(struct Player* player)
 	player->resetYMin = 1;
 	player->hasJump = 1;
 	player->gravity = 0;
+	player->currentPowerup = 0;
 }
 inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 {
@@ -271,4 +280,67 @@ inline void Physics(struct Player* player, struct Box enviornment[20])
 		player->gravity = 0;
 	}
 	PlayerCollisions(player, enviornment);
+}
+inline void DrawEnviornment(CP_Color bgColor)
+{
+	CP_Graphics_ClearBackground(bgColor);
+	CP_Settings_RectMode(CP_POSITION_CORNER);
+	CP_Settings_Fill(CP_Color_Create(40, 40, 40, 255));
+	CP_Settings_Stroke(CP_Color_Create(60, 60, 60, 255));
+	CP_Settings_StrokeWeight(20.0f);
+	CP_Graphics_DrawRect(0, 0, 800, 800);
+	CP_Settings_RectMode(CP_POSITION_CENTER);
+}
+inline void Attack(struct Player* player, struct Arrow* arrow)
+{
+	switch (player->currentPowerup)
+	{
+		case 0:
+			break;
+		case 1:
+			SpawnProjectile(player, arrow);
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+	}
+}
+inline void PlayerInput(struct Player* player, struct Arrow* arrow)
+{
+	float moveSpeed = 7;
+	if (CP_Input_KeyDown(player->jump) && player->hasJump == 1)
+	{
+		player->playerVelocity.y = -25;
+		player->hasJump = 0;
+	}
+	if (CP_Input_KeyDown(player->left))
+	{
+		player->playerVelocity.x = -moveSpeed;
+		player->facingDirection = -1;
+	}
+	if (CP_Input_KeyDown(player->right))
+	{
+		player->playerVelocity.x = moveSpeed;
+		player->facingDirection = 1;
+	}
+	if (CP_Input_KeyReleased(player->left) || CP_Input_KeyReleased(player->right))
+	{
+		player->playerVelocity.x = 0;
+	}
+	if (CP_Input_KeyDown(player->attack))
+	{
+		Attack(player, arrow);
+	}
+}
+inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2)
+{
+	int currentLevelsImplemented = 1;
+	int levelNum = rand() % currentLevelsImplemented;
+	int powerUpNum = (rand() % 3) + 1;
+	player1->currentPowerup = powerUpNum;
+	player2->currentPowerup = powerUpNum;
+	LoadLevelData(levels[levelNum], player1, player2);
 }
