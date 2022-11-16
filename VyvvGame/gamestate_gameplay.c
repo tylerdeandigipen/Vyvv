@@ -208,6 +208,8 @@ void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* 
 
 void gamestate_gameplay_init(void)
 {
+	ResetProjectile(&arrow1);
+	ResetProjectile(&arrow2);
 	srand(1);
 	bgColor = CP_Color_Create(160, 160, 250, 255);
 	//reset deaths
@@ -237,7 +239,7 @@ void gamestate_gameplay_init(void)
 	globalXOffset = 0;
 	globalYOffset = 0;
 	CP_Settings_RectMode(CP_POSITION_CENTER);
-	RandomizeLevelAndPowerup(levels, &player1, &player2);
+	RandomizeLevelAndPowerup(levels, &player1, &player2, &arrow1, &arrow2);
 }
 
 void gamestate_gameplay_update(void)
@@ -253,7 +255,7 @@ void gamestate_gameplay_update(void)
 	//drawKnife(&player1, &knife1);
 	//drawKnife(&player2, &knife2);
 	DisplayWins(&player1, &player2);
-	LevelManager(levels, &player1, &player2);
+	LevelManager(levels, &player1, &player2, &arrow1, &arrow2);
 
 	//DrawDebugText();
 	if (CP_Input_KeyDown(KEY_F))

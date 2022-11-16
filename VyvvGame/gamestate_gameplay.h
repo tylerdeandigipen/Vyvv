@@ -180,8 +180,8 @@ inline void PlayerCollisions(struct Player* player, struct Box enviornment[20])
 			}
 		}
 	}
-	player->maxLimitX = 788;
-	player->minLimitX = 12;
+	player->maxLimitX = 778;
+	player->minLimitX = 2;
 	if (player->playerX <= enviornment[player->closestBox].topLeftCorner.x && player->playerX <= enviornment[player->closestBox].bottomRightCorner.x) // if player is on the left of the box
 	{
 		if (player->playerX <= enviornment[player->closestBox].topLeftCorner.x && player->playerY >= enviornment[player->closestBox].topLeftCorner.y) // if player is not ontop of box and to left
@@ -214,8 +214,8 @@ inline void InitializePlayer(struct Player* player)
 	player->playerVelocity.y = 0;
 	player->playerVelocity.x = 0;
 	player->maxLimitY = 585;//floor
-	player->maxLimitX = 788;//right walls
-	player->minLimitY = 15;//left walls
+	player->maxLimitX = 775;//right walls
+	player->minLimitY = 0;//left walls
 	player->minLimitX = 20;//ceiling
 	player->higherGround = 0;
 	player->resetXMax = 0;
@@ -244,6 +244,15 @@ inline void ProjectilePhysics(struct Arrow* arrow)
 	arrow->position.y += arrow->velocity.y;
 	arrow->position.x += arrow->velocity.x;
 	CP_Graphics_DrawRect(arrow->position.x, arrow->position.y, 10, 10);
+}
+inline void ResetProjectile(struct Arrow* arrow)
+{
+	//reset projectiles
+	arrow->position.x = -1000; //send into space so is not seen
+	arrow->position.y = -1000;
+	arrow->velocity.x = 0;
+	arrow->velocity.y = 0;
+	arrow->gravity = 0;
 }
 inline void DrawPlayer(struct Player player)
 {
@@ -337,8 +346,10 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow)
 		Attack(player, arrow);
 	}
 }
-inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2)
+inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2)
 {
+	ResetProjectile(arrow1);
+	ResetProjectile(arrow2);
 	int currentLevelsImplemented = 2;
 	int levelNum = rand() % currentLevelsImplemented;
 	int powerUpNum = (rand() % 3) + 1;
@@ -356,7 +367,7 @@ inline void DisplayWins(struct Player* player1, struct Player* player2)
 	sprintf_s(buffer, _countof(buffer), "Orange Wins: %i", player1->deaths);
 	CP_Font_DrawText(buffer, 1, 35);
 };
-inline void LevelManager(char levels[20][20], struct Player* player1, struct Player* player2)
+inline void LevelManager(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2)
 {
 	if (player1->isDead == 1 || player2->isDead == 1)
 	{
@@ -381,6 +392,6 @@ inline void LevelManager(char levels[20][20], struct Player* player1, struct Pla
 				CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
 			}
 		}
-		RandomizeLevelAndPowerup(levels, player1, player2);
+		RandomizeLevelAndPowerup(levels, player1, player2, arrow1, arrow2);
 	}
 }
