@@ -276,18 +276,18 @@ inline void drawKnife(struct Player* player, struct Knife* knife)
 
 		if (player->facingDirection == 1)
 		{
-			CP_Graphics_DrawRectAdvanced((knife->knifeX + knife->knifeOffset + 25), knife->knifeY + 7, 5, 25, 90, 0);
+			CP_Graphics_DrawRectAdvanced((knife->knifeX + knife->knifeOffset + 30), knife->knifeY + 7, 5, 25, 90, 0);
 		}
 		else if (player->facingDirection == -1)
 		{
-			CP_Graphics_DrawRectAdvanced((knife->knifeX - knife->knifeOffset), knife->knifeY + 7, 5, 25, 90, 0);
+			CP_Graphics_DrawRectAdvanced((knife->knifeX - knife->knifeOffset + 15), knife->knifeY + 7, 5, 25, 90, 0);
 		}
 
 		if (knife->knifeTimer > 0.3)
 		{
 			knife->isAnimating = 0;
 			knife->knifeTimer = 0;
-			knife->knifeOffset = 10;
+			knife->knifeOffset = 0;
 		}
 	}
 }

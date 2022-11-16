@@ -225,7 +225,7 @@ void gamestate_gameplay_update(void)
 	}
 
 	if (IsColliding(player2.playerX - 14, player2.playerY - 14, player2.playerX + 14, player2.playerY + 14,
-		knife1.knifeX - knife1.knifeOffset, knife1.knifeY - knife1.knifeOffset, knife1.knifeX + knife1.knifeOffset, knife1.knifeY + knife1.knifeOffset) == 1 && knife1.isAnimating == 1)
+		knife1.knifeX - 35, knife1.knifeY - 35, knife1.knifeX + 35, knife1.knifeY + 35) == 1 && knife1.isAnimating == 1)
 	{
 		player2.isDead = 1;
 	}
