@@ -20,10 +20,10 @@ struct Knife
 {
 	float knifeX;
 	float knifeY;
-	float knifeXSpawn;
-	float knifeYSpawn;
-	float knifeX2Spawn;
-	float knifeY2Spawn;
+
+	float knifeOffset;
+	float knifeTimer;
+	int isAnimating;
 };
 struct Box
 {
@@ -80,6 +80,21 @@ void gamestate_gameplay_init(void);
 void gamestate_gameplay_update(void);
 void gamestate_gameplay_exit(void);
 void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* playerTwo);
+
+inline int IsColliding(float x1, float y1, float x2, float y2, float boxX1, float boxY1, float boxX2, float boxY2)
+{
+	if (boxX1 >= x2 || boxY1 >= y2 || boxX2 <= x1 || boxY2 <= y1)
+	{
+		// no overlap
+		return 0;
+	}
+	else
+	{
+		// overlap
+		return 1;
+	}
+}
+
 inline void PlayerCollisions(struct Player* player, struct Box enviornment[20])
 {
 	player->previousDistance = 1000;
@@ -238,6 +253,44 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 	arrow->velocity.y = -15;
 	arrow->gravity = 2;
 }
+
+inline void initalizeKnife(struct Knife* knife)
+{
+	knife->knifeOffset = 0;
+	knife->knifeTimer = 0;
+	knife->isAnimating = 10;
+}
+
+inline void drawKnife(struct Player* player, struct Knife* knife)
+{
+	knife->knifeX = player->playerX;
+	knife->knifeY = player->playerY;
+
+	CP_Settings_NoStroke();
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+
+	if (knife->isAnimating == 1)
+	{
+		knife->knifeTimer += CP_System_GetDt();
+		knife->knifeOffset = CP_Math_LerpFloat(knife->knifeOffset, 23, knife->knifeTimer);
+
+		if (player->facingDirection == 1)
+		{
+			CP_Graphics_DrawRectAdvanced((knife->knifeX + knife->knifeOffset + 25), knife->knifeY + 7, 5, 25, 90, 0);
+		}
+		else if (player->facingDirection == -1)
+		{
+			CP_Graphics_DrawRectAdvanced((knife->knifeX - knife->knifeOffset), knife->knifeY + 7, 5, 25, 90, 0);
+		}
+
+		if (knife->knifeTimer > 0.3)
+		{
+			knife->isAnimating = 0;
+			knife->knifeTimer = 0;
+			knife->knifeOffset = 10;
+		}
+	}
+}
 inline void ProjectilePhysics(struct Arrow* arrow)
 {
 	arrow->velocity.y += arrow->gravity;
@@ -302,7 +355,7 @@ inline void DrawEnviornment(CP_Color bgColor)
 	CP_Graphics_DrawRect(0, 0, 800, 800);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
-inline void Attack(struct Player* player, struct Arrow* arrow)
+inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* knife)
 {
 	switch (player->currentPowerup)
 	{
@@ -312,6 +365,7 @@ inline void Attack(struct Player* player, struct Arrow* arrow)
 			SpawnProjectile(player, arrow);
 			break;
 		case 2:
+			knife->isAnimating = 1;
 			break;
 		case 3:
 			break;
@@ -319,9 +373,9 @@ inline void Attack(struct Player* player, struct Arrow* arrow)
 			break;
 	}
 }
-inline void PlayerInput(struct Player* player, struct Arrow* arrow)
+inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife)
 {
-	float moveSpeed = 7;
+	float moveSpeed = 3;
 	if (CP_Input_KeyDown(player->jump) && player->hasJump == 1)
 	{
 		player->playerVelocity.y = -25;
@@ -343,7 +397,7 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow)
 	}
 	if (CP_Input_KeyDown(player->attack))
 	{
-		Attack(player, arrow);
+		Attack(player, arrow, knife);
 	}
 }
 inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2)

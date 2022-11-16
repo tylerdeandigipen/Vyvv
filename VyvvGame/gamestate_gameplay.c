@@ -58,51 +58,11 @@ void ApplyTransformations()
 	}
 }
 
-float knifeOffset = 10;
-float knifeTimer = 0;
-int isAnimating = 0;
-float powerUpRadius = 30.0f;
-
 BOOLEAN knifePickedUp1 = FALSE;
 BOOLEAN knifePickedUp2 = FALSE;
 BOOLEAN knifePickupSpawn = TRUE;
 
-void drawKnife(struct Player* player, struct Knife* knife)
-{
 
-	knife->knifeX = player->playerX;
-	knife->knifeY = player->playerY;
-
-	CP_Settings_NoStroke();
-	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-
-	if (CP_Input_KeyTriggered(KEY_E))
-	{
-		isAnimating = 1;
-	}
-
-	if (isAnimating == 1)
-	{
-		knifeTimer += CP_System_GetDt();
-		knifeOffset = CP_Math_LerpFloat(knifeOffset, 23, knifeTimer);
-
-		if (player->facingDirection == 1)
-		{
-			CP_Graphics_DrawRectAdvanced((knife->knifeX + knifeOffset), knife->knifeY, 5, 25, 90, 0);
-		}
-		else if (player->facingDirection == -1)
-		{
-			CP_Graphics_DrawRectAdvanced((knife->knifeX - knifeOffset), knife->knifeY, 5, 25, 90, 0);
-		}
-
-		if (knifeTimer > 0.3)
-		{
-			isAnimating = 0;
-			knifeTimer = 0;
-			knifeOffset = 10;
-		}
-	}
-}
 void DrawDebugText()
 {
 	CP_Settings_Fill(CP_Color_Create(200, 200, 200, 255));
@@ -244,18 +204,31 @@ void gamestate_gameplay_init(void)
 
 void gamestate_gameplay_update(void)
 {
+	player1.currentPowerup = 2;
 	DrawEnviornment(bgColor);
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
 	ProjectilePhysics(&arrow1);
-	PlayerInput(&player1, &arrow1);
-	PlayerInput(&player2, &arrow2);
+	PlayerInput(&player1, &arrow1, &knife1);
+	PlayerInput(&player2, &arrow2, &knife2);
 	DrawPlayer(player2);
 	DrawPlayer(player1);
-	//drawKnife(&player1, &knife1);
-	//drawKnife(&player2, &knife2);
+	drawKnife(&player1, &knife1);
+	drawKnife(&player2, &knife2);
 	DisplayWins(&player1, &player2);
 	LevelManager(levels, &player1, &player2, &arrow1, &arrow2);
+	
+	if (IsColliding(player1.playerX - 14, player1.playerY - 14, player1.playerX + 14, player1.playerY + 14,
+		knife2.knifeX - knife2.knifeOffset, knife2.knifeY - knife2.knifeOffset, knife2.knifeX + knife2.knifeOffset, knife2.knifeY + knife2.knifeOffset) == 1 && knife2.isAnimating == 1)
+	{
+		player1.isDead = 1;
+	}
+
+	if (IsColliding(player2.playerX - 14, player2.playerY - 14, player2.playerX + 14, player2.playerY + 14,
+		knife1.knifeX - knife1.knifeOffset, knife1.knifeY - knife1.knifeOffset, knife1.knifeX + knife1.knifeOffset, knife1.knifeY + knife1.knifeOffset) == 1 && knife1.isAnimating == 1)
+	{
+		player2.isDead = 1;
+	}
 
 	//DrawDebugText();
 	if (CP_Input_KeyDown(KEY_F))
