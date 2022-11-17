@@ -16,6 +16,14 @@
 #include <time.h>
 #pragma warning(disable:4996)
 #pragma once
+
+struct Lazer
+{
+	float lazerVelocity;
+	float lazerY;
+	float lazerX;
+	float lazerRadius;
+};
 struct Knife
 {
 	float knifeX;
@@ -254,6 +262,20 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 	arrow->gravity = 2;
 }
 
+inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
+{
+	lazer->lazerRadius = 10.0f;
+	lazer->lazerVelocity = 60 * player->facingDirection + player->playerVelocity.x;
+	lazer->lazerX = player->playerX;
+	lazer->lazerY = player->playerY;
+}
+
+inline void drawLazer(struct Player* player, struct Lazer* lazer)
+{
+	CP_Settings_Fill(CP_Color_Create(230, 180, 50, 150));
+	CP_Graphics_DrawCircle(lazer->lazerX, lazer->lazerY -= lazer->lazerVelocity * CP_System_GetDt(), lazer->lazerRadius);
+}
+
 inline void initalizeKnife(struct Knife* knife)
 {
 	knife->knifeOffset = 0;
@@ -355,7 +377,7 @@ inline void DrawEnviornment(CP_Color bgColor)
 	CP_Graphics_DrawRect(0, 0, 800, 800);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
-inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* knife)
+inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
 {
 	switch (player->currentPowerup)
 	{
@@ -368,14 +390,15 @@ inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* kni
 			knife->isAnimating = 1;
 			break;
 		case 3:
+			drawLazer(player, lazer);
 			break;
 		case 4:
 			break;
 	}
 }
-inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife)
+inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
 {
-	float moveSpeed = 3;
+	float moveSpeed = 5;
 	if (CP_Input_KeyDown(player->jump) && player->hasJump == 1)
 	{
 		player->playerVelocity.y = -25;
@@ -397,7 +420,7 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife
 	}
 	if (CP_Input_KeyDown(player->attack))
 	{
-		Attack(player, arrow, knife);
+		Attack(player, arrow, knife, lazer);
 	}
 }
 inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2)

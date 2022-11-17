@@ -27,6 +27,7 @@ char levels[20][20] = { "level_Arena.txt", "level2.txt"};
 struct Player player1, player2;
 struct Arrow arrow1, arrow2;
 struct Knife knife1, knife2;
+struct Lazer lazer1, lazer2;
 void TestMoveCamera()
 {
 	if (CP_Input_KeyDown(KEY_I))
@@ -204,13 +205,13 @@ void gamestate_gameplay_init(void)
 
 void gamestate_gameplay_update(void)
 {
-	player1.currentPowerup = 2;
+	player1.currentPowerup = 3;
 	DrawEnviornment(bgColor);
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
 	ProjectilePhysics(&arrow1);
-	PlayerInput(&player1, &arrow1, &knife1);
-	PlayerInput(&player2, &arrow2, &knife2);
+	PlayerInput(&player1, &arrow1, &knife1, &lazer1);
+	PlayerInput(&player2, &arrow2, &knife2, &lazer2);
 	DrawPlayer(player2);
 	DrawPlayer(player1);
 	drawKnife(&player1, &knife1);
