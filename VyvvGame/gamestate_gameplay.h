@@ -23,6 +23,8 @@ struct Lazer
 	float lazerY;
 	float lazerX;
 	float lazerRadius;
+
+	int inMotion;
 };
 struct Knife
 {
@@ -264,16 +266,24 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 
 inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 {
-	lazer->lazerRadius = 10.0f;
-	lazer->lazerVelocity = 60 * player->facingDirection + player->playerVelocity.x;
-	lazer->lazerX = player->playerX;
+	lazer->inMotion = 0;
+	lazer->lazerVelocity = 50 * player->facingDirection;
+	lazer->lazerRadius = 40.0f;
+	lazer->lazerX = player->playerX - 30;
 	lazer->lazerY = player->playerY;
 }
 
 inline void drawLazer(struct Player* player, struct Lazer* lazer)
 {
-	CP_Settings_Fill(CP_Color_Create(230, 180, 50, 150));
-	CP_Graphics_DrawCircle(lazer->lazerX, lazer->lazerY -= lazer->lazerVelocity * CP_System_GetDt(), lazer->lazerRadius);
+	CP_Settings_NoStroke();
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+
+	if (lazer->inMotion == 1)
+	{
+		lazer->lazerX += lazer->lazerVelocity;
+
+		CP_Graphics_DrawCircle(lazer->lazerX, lazer->lazerY + 10, 10);
+	}
 }
 
 inline void initalizeKnife(struct Knife* knife)
@@ -377,6 +387,7 @@ inline void DrawEnviornment(CP_Color bgColor)
 	CP_Graphics_DrawRect(0, 0, 800, 800);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
+
 inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
 {
 	switch (player->currentPowerup)
@@ -390,7 +401,8 @@ inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* kni
 			knife->isAnimating = 1;
 			break;
 		case 3:
-			drawLazer(player, lazer);
+			initalizeLazer(player, lazer);
+			lazer->inMotion = 1;
 			break;
 		case 4:
 			break;
