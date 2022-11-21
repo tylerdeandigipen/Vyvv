@@ -28,6 +28,7 @@ struct Player player1, player2;
 struct Arrow arrow1, arrow2;
 struct Knife knife1, knife2;
 struct Lazer lazer1, lazer2;
+struct Controllers controller1, controller2;
 void TestMoveCamera()
 {
 	if (CP_Input_KeyDown(KEY_I))
@@ -164,6 +165,8 @@ void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* 
 
 void gamestate_gameplay_init(void)
 {
+	initializeControllers(&controller1);
+	initializeControllers(&controller1);
 	ResetProjectile(&arrow1);
 	ResetProjectile(&arrow2);
 	srand(1);
@@ -205,8 +208,8 @@ void gamestate_gameplay_update(void)
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
 	ProjectilePhysics(&arrow1);
-	PlayerInput(&player1, &arrow1, &knife1, &lazer1);
-	PlayerInput(&player2, &arrow2, &knife2, &lazer2);
+	PlayerInput(&player1, &arrow1, &knife1, &lazer1, &controller1);
+	PlayerInput(&player2, &arrow2, &knife2, &lazer2, &controller2);
 	DrawPlayer(player2);
 	DrawPlayer(player1);
 	drawKnife(&player1, &knife1);

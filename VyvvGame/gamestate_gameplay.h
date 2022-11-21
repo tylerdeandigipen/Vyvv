@@ -17,6 +17,12 @@
 #pragma warning(disable:4996)
 #pragma once
 
+struct Controllers
+{
+	CP_Vector leftStick;
+	float rightTrigger;
+	float buttonA;
+};
 struct Lazer
 {
 	float lazerVelocity;
@@ -264,6 +270,13 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 	arrow->gravity = 2;
 }
 
+inline void initializeControllers(struct Controllers* controller)
+{
+	controller->leftStick = CP_Input_GamepadLeftStick();
+	controller->buttonA = GAMEPAD_A;
+	controller->rightTrigger = CP_Input_GamepadRightTrigger();
+}
+
 inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 {
 	lazer->inMotion = 0;
@@ -408,29 +421,30 @@ inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* kni
 			break;
 	}
 }
-inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
+inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer, struct Controllers* controller)
 {
 	float moveSpeed = 5;
-	if (CP_Input_KeyDown(player->jump) && player->hasJump == 1)
+	//initializeControllers(controller); uncomment to check controller stuff
+	if ((CP_Input_KeyDown(player->jump) && player->hasJump == 1) || (CP_Input_GamepadDown(controller->buttonA) && player->hasJump == 1))
 	{
 		player->playerVelocity.y = -25;
 		player->hasJump = 0;
 	}
-	if (CP_Input_KeyDown(player->left))
+	if (CP_Input_KeyDown(player->left) /*|| controller->leftStick.x < 0*/)
 	{
 		player->playerVelocity.x = -moveSpeed;
 		player->facingDirection = -1;
 	}
-	if (CP_Input_KeyDown(player->right))
+	if (CP_Input_KeyDown(player->right) /*|| controller->leftStick.x > 0 */)
 	{
 		player->playerVelocity.x = moveSpeed;
 		player->facingDirection = 1;
 	}
-	if (CP_Input_KeyReleased(player->left) || CP_Input_KeyReleased(player->right))
+	if (CP_Input_KeyReleased(player->left) || CP_Input_KeyReleased(player->right) /*|| controller->leftStick.x == 0*/)
 	{
 		player->playerVelocity.x = 0;
 	}
-	if (CP_Input_KeyDown(player->attack))
+	if (CP_Input_KeyDown(player->attack) || controller->rightTrigger == 1)
 	{
 		Attack(player, arrow, knife, lazer);
 	}
