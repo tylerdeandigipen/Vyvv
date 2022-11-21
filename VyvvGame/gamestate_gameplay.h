@@ -53,6 +53,7 @@ struct Box
 };
 struct Player
 {
+	int buttonHeld;
 	int isDead;
 	int deaths;
 	float playerX;
@@ -371,6 +372,7 @@ inline void Physics(struct Player* player, struct Box enviornment[20])
 		player->currentWorldOffset.x = globalXOffset;
 	}
 	*/
+	float gravity = .5f;
 	player->playerX += player->playerVelocity.x;
 	player->playerY += player->playerVelocity.y;
 
@@ -378,7 +380,7 @@ inline void Physics(struct Player* player, struct Box enviornment[20])
 	if (player->playerY <= player->maxLimitY + 1)
 	{
 		player->hasJump = 0;
-		player->gravity += 1.25f;
+		player->gravity += gravity;
 		player->playerVelocity.y += player->gravity;
 		player->playerVelocity.y = CP_Math_ClampFloat(player->playerVelocity.y, -25, 25);
 	}
@@ -423,26 +425,38 @@ inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* kni
 }
 inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer, struct Controllers* controller)
 {
-	float moveSpeed = 5;
+	float moveSpeed = 7;
 	//initializeControllers(controller); uncomment to check controller stuff
 	if ((CP_Input_KeyDown(player->jump) && player->hasJump == 1) || (CP_Input_GamepadDown(controller->buttonA) && player->hasJump == 1))
 	{
-		player->playerVelocity.y = -25;
+		player->playerVelocity.y = -17;
 		player->hasJump = 0;
 	}
 	if (CP_Input_KeyDown(player->left) /*|| controller->leftStick.x < 0*/)
 	{
-		player->playerVelocity.x = -moveSpeed;
+		if (player->playerVelocity.x > -moveSpeed + 1)
+		{
+			player->playerVelocity.x += -moveSpeed / 3;
+		}
 		player->facingDirection = -1;
+		player->buttonHeld = 1;
 	}
 	if (CP_Input_KeyDown(player->right) /*|| controller->leftStick.x > 0 */)
 	{
-		player->playerVelocity.x = moveSpeed;
+		if (player->playerVelocity.x < moveSpeed - 1)
+		{
+			player->playerVelocity.x += moveSpeed / 3;
+		}
 		player->facingDirection = 1;
+		player->buttonHeld = 1;
 	}
-	if (CP_Input_KeyReleased(player->left) || CP_Input_KeyReleased(player->right) /*|| controller->leftStick.x == 0*/)
+	if (CP_Input_KeyReleased(player->right) || CP_Input_KeyReleased(player->left))
 	{
-		player->playerVelocity.x = 0;
+		player->buttonHeld = 0;
+	}
+	if (player->hasJump == 1 && player->buttonHeld == 0)//make drag
+	{
+		player->playerVelocity.x = player->playerVelocity.x * .4f;
 	}
 	if (CP_Input_KeyDown(player->attack) || controller->rightTrigger == 1)
 	{

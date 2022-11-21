@@ -29,36 +29,6 @@ struct Arrow arrow1, arrow2;
 struct Knife knife1, knife2;
 struct Lazer lazer1, lazer2;
 struct Controllers controller1, controller2;
-void TestMoveCamera()
-{
-	if (CP_Input_KeyDown(KEY_I))
-	{
-		globalYOffset -= 7;
-	}
-	if (CP_Input_KeyDown(KEY_J))
-	{
-		globalXOffset -= 7;
-	}
-	if (CP_Input_KeyDown(KEY_L))
-	{
-		globalXOffset += 7;
-	}
-	if (CP_Input_KeyDown(KEY_K))
-	{
-		globalYOffset += 7;
-	}
-}
-void ApplyTransformations()
-{
-	for (int i = 0; i < 20; i++)
-	{
-		enviornment[i].topLeftCorner.y = enviornment[i].globalTopLeftCorner.y + globalYOffset;
-		enviornment[i].topLeftCorner.x = enviornment[i].globalTopLeftCorner.x + globalXOffset;
-
-		enviornment[i].bottomRightCorner.y = enviornment[i].globalBottomRightCorner.y + globalYOffset;
-		enviornment[i].bottomRightCorner.x = enviornment[i].globalBottomRightCorner.x + globalXOffset;
-	}
-}
 
 void DrawDebugText()
 {
@@ -203,7 +173,6 @@ void gamestate_gameplay_init(void)
 
 void gamestate_gameplay_update(void)
 {
-	player1.currentPowerup = 3;
 	DrawEnviornment(bgColor);
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
