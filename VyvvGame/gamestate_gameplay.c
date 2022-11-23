@@ -28,7 +28,6 @@ struct Player player1, player2;
 struct Arrow arrow1, arrow2;
 struct Knife knife1, knife2;
 struct Lazer lazer1, lazer2;
-struct Controllers controller1, controller2;
 
 void DrawDebugText()
 {
@@ -135,8 +134,6 @@ void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* 
 
 void gamestate_gameplay_init(void)
 {
-	initializeControllers(&controller1);
-	initializeControllers(&controller1);
 	ResetProjectile(&arrow1);
 	ResetProjectile(&arrow2);
 	srand(1);
@@ -153,16 +150,34 @@ void gamestate_gameplay_init(void)
 	player2.lineColor = CP_Color_Create(255, 120, 0, 255);
 	player2.fillColor = CP_Color_Create(255, 180, 100, 255);
 	//init player kebinds
-	player1.left = KEY_A;
-	player1.right = KEY_D;
-	player1.jump = KEY_W;
-	player1.attack = KEY_E;
-	
-	player2.left = KEY_LEFT;
-	player2.right = KEY_RIGHT;
-	player2.jump = KEY_UP;
-	player2.attack = KEY_DOWN;
+	if (CP_Input_GamepadConnectedAdvanced(0))
+	{
+		player1.leftStick = CP_Input_GamepadLeftStickAdvanced(0);
+		player1.jump = CP_Input_GamepadDown(GAMEPAD_A);
+		player1.rightTrigger = CP_Input_GamepadRightTriggerAdvanced(0);
 
+	}
+	else
+	{
+		player1.left = KEY_A;
+		player1.right = KEY_D;
+		player1.jump = KEY_W;
+		player1.attack = KEY_E;
+	}
+
+	if (CP_Input_GamepadConnectedAdvanced(1))
+	{
+		player2.leftStick = CP_Input_GamepadLeftStickAdvanced(1);
+		player2.jump = CP_Input_GamepadDownAdvanced(GAMEPAD_A, 1);
+		player2.rightTrigger = CP_Input_GamepadRightTriggerAdvanced(1);
+	}
+	else
+	{
+		player2.left = KEY_LEFT;
+		player2.right = KEY_RIGHT;
+		player2.jump = KEY_UP;
+		player2.attack = KEY_DOWN;
+	}
 	InitializePlayer(&player1);
 	InitializePlayer(&player2);
 	globalXOffset = 0;
@@ -173,12 +188,39 @@ void gamestate_gameplay_init(void)
 
 void gamestate_gameplay_update(void)
 {
+	if (CP_Input_GamepadConnectedAdvanced(0))
+	{
+		player1.leftStick = CP_Input_GamepadLeftStickAdvanced(0);
+		player1.jump = CP_Input_GamepadDown(GAMEPAD_A);
+		player1.rightTrigger = CP_Input_GamepadRightTriggerAdvanced(0);
+	}
+	else
+	{
+		player1.left = KEY_A;
+		player1.right = KEY_D;
+		player1.jump = KEY_W;
+		player1.attack = KEY_E;
+	}
+
+	if (CP_Input_GamepadConnectedAdvanced(1))
+	{
+		player2.leftStick = CP_Input_GamepadLeftStickAdvanced(1);
+		player2.jump = CP_Input_GamepadDownAdvanced(GAMEPAD_A, 1);
+		player2.rightTrigger = CP_Input_GamepadRightTriggerAdvanced(1);
+	}
+	else
+	{
+		player2.left = KEY_LEFT;
+		player2.right = KEY_RIGHT;
+		player2.jump = KEY_UP;
+		player2.attack = KEY_DOWN;
+	}
 	DrawEnviornment(bgColor);
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
 	ProjectilePhysics(&arrow1);
-	PlayerInput(&player1, &arrow1, &knife1, &lazer1, &controller1);
-	PlayerInput(&player2, &arrow2, &knife2, &lazer2, &controller2);
+	PlayerInput(&player1, &arrow1, &knife1, &lazer1);
+	PlayerInput(&player2, &arrow2, &knife2, &lazer2);
 	DrawPlayer(player2);
 	DrawPlayer(player1);
 	drawKnife(&player1, &knife1);

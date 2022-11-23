@@ -17,12 +17,6 @@
 #pragma warning(disable:4996)
 #pragma once
 
-struct Controllers
-{
-	CP_Vector leftStick;
-	float rightTrigger;
-	float buttonA;
-};
 struct Lazer
 {
 	float lazerVelocity;
@@ -86,6 +80,10 @@ struct Player
 	CP_KEY right;
 	CP_KEY jump;
 	CP_KEY attack;
+
+	//controller bits
+	CP_Vector leftStick;
+	float rightTrigger;
 };
 struct Arrow
 {
@@ -271,12 +269,12 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 	arrow->gravity = 2;
 }
 
-inline void initializeControllers(struct Controllers* controller)
+/*inline void initializeControllers(struct Controllers* controller)
 {
-	controller->leftStick = CP_Input_GamepadLeftStick();
+	player->leftStick = CP_Input_GamepadLeftStickAdvanced(0);
 	controller->buttonA = GAMEPAD_A;
-	controller->rightTrigger = CP_Input_GamepadRightTrigger();
-}
+	controller->rightTrigger = ;
+}*/
 
 inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 {
@@ -423,44 +421,84 @@ inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* kni
 			break;
 	}
 }
-inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer, struct Controllers* controller)
+inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
 {
 	float moveSpeed = 7;
-	//initializeControllers(controller); uncomment to check controller stuff
-	if ((CP_Input_KeyDown(player->jump) && player->hasJump == 1) || (CP_Input_GamepadDown(controller->buttonA) && player->hasJump == 1))
+	if (CP_Input_GamepadConnectedAdvanced(0) || CP_Input_GamepadConnectedAdvanced(1))
 	{
-		player->playerVelocity.y = -17;
-		player->hasJump = 0;
-	}
-	if (CP_Input_KeyDown(player->left) /*|| controller->leftStick.x < 0*/)
-	{
-		if (player->playerVelocity.x > -moveSpeed + 1)
+		if (player->jump == 1 && player->hasJump == 1)
 		{
-			player->playerVelocity.x += -moveSpeed / 3;
+			player->playerVelocity.y = -17;
+			player->hasJump = 0;
 		}
-		player->facingDirection = -1;
-		player->buttonHeld = 1;
-	}
-	if (CP_Input_KeyDown(player->right) /*|| controller->leftStick.x > 0 */)
-	{
-		if (player->playerVelocity.x < moveSpeed - 1)
+		if (player->leftStick.x < 0)
 		{
-			player->playerVelocity.x += moveSpeed / 3;
+			if (player->playerVelocity.x > -moveSpeed + 1)
+			{
+				player->playerVelocity.x += -moveSpeed / 3;
+			}
+			player->facingDirection = -1;
+			player->buttonHeld = 1;
 		}
-		player->facingDirection = 1;
-		player->buttonHeld = 1;
+		if (player->leftStick.x > 0)
+		{
+			if (player->playerVelocity.x < moveSpeed - 1)
+			{
+				player->playerVelocity.x += moveSpeed / 3;
+			}
+			player->facingDirection = 1;
+			player->buttonHeld = 1;
+		}
+		if (player->leftStick.x == 0)
+		{
+			player->buttonHeld = 0;
+		}
+		if (player->hasJump == 1 && player->buttonHeld == 0)//make drag
+		{
+			player->playerVelocity.x = player->playerVelocity.x * .4f;
+		}
+		if (player->rightTrigger == 1)
+		{
+			Attack(player, arrow, knife, lazer);
+		}
 	}
-	if (CP_Input_KeyReleased(player->right) || CP_Input_KeyReleased(player->left))
+	else
 	{
-		player->buttonHeld = 0;
-	}
-	if (player->hasJump == 1 && player->buttonHeld == 0)//make drag
-	{
-		player->playerVelocity.x = player->playerVelocity.x * .4f;
-	}
-	if (CP_Input_KeyDown(player->attack) || controller->rightTrigger == 1)
-	{
-		Attack(player, arrow, knife, lazer);
+		if ((CP_Input_KeyDown(player->jump) && player->hasJump == 1))
+		{
+			player->playerVelocity.y = -17;
+			player->hasJump = 0;
+		}
+		if (CP_Input_KeyDown(player->left))
+		{
+			if (player->playerVelocity.x > -moveSpeed + 1)
+			{
+				player->playerVelocity.x += -moveSpeed / 3;
+			}
+			player->facingDirection = -1;
+			player->buttonHeld = 1;
+		}
+		if (CP_Input_KeyDown(player->right))
+		{
+			if (player->playerVelocity.x < moveSpeed - 1)
+			{
+				player->playerVelocity.x += moveSpeed / 3;
+			}
+			player->facingDirection = 1;
+			player->buttonHeld = 1;
+		}
+		if (CP_Input_KeyReleased(player->right) || CP_Input_KeyReleased(player->left))
+		{
+			player->buttonHeld = 0;
+		}
+		if (player->hasJump == 1 && player->buttonHeld == 0)//make drag
+		{
+			player->playerVelocity.x = player->playerVelocity.x * .4f;
+		}
+		if (CP_Input_KeyDown(player->attack))
+		{
+			Attack(player, arrow, knife, lazer);
+		}
 	}
 }
 inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2)
