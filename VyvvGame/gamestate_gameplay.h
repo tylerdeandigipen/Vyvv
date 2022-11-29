@@ -168,7 +168,7 @@ inline void PlayerCollisions(struct Player* player, struct Box enviornment[20])
 				CP_Settings_Fill(enviornment[i].groundColor);
 			}
 			CP_Settings_StrokeWeight(3.0f);
-			CP_Graphics_DrawRect(enviornment[i].topLeftCorner.x + 23, enviornment[i].topLeftCorner.y + 23, enviornment[i].bottomRightCorner.x - enviornment[i].topLeftCorner.x - 27, enviornment[i].bottomRightCorner.y - enviornment[i].topLeftCorner.y); // add 15 to for right edges
+			CP_Graphics_DrawRect(enviornment[i].topLeftCorner.x + 23, enviornment[i].topLeftCorner.y + 23, enviornment[i].bottomRightCorner.x - enviornment[i].topLeftCorner.x - 27, enviornment[i].bottomRightCorner.y - enviornment[i].topLeftCorner.y - 12); // add 15 to for right edges
 			//error correction, if player is in box set position to nearest edge
 			if (player->playerX > enviornment[i].topLeftCorner.x && player->playerX < enviornment[i].bottomRightCorner.x) // if player is inbetween both vertical edges
 			{
@@ -505,7 +505,7 @@ inline void RandomizeLevelAndPowerup(char levels[20][20], struct Player* player1
 {
 	ResetProjectile(arrow1);
 	ResetProjectile(arrow2);
-	int currentLevelsImplemented = 2;
+	int currentLevelsImplemented = 3;
 	int levelNum = rand() % currentLevelsImplemented;
 	int powerUpNum = (rand() % 3) + 1;
 	player1->currentPowerup = powerUpNum;

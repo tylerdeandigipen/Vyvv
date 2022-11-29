@@ -23,7 +23,7 @@ CP_Color bgColor;
 float globalXOffset = 0;
 float globalYOffset = 0;
 struct Box enviornment[20];
-char levels[20][20] = { "level_Arena.txt", "level2.txt"};
+char levels[20][20] = {"level2.txt", "level3.txt", "level4.txt"};
 struct Player player1, player2;
 struct Arrow arrow1, arrow2;
 struct Knife knife1, knife2;
@@ -52,6 +52,7 @@ void LoadLevelData(char levelName[20], struct Player* playerOne, struct Player* 
 		enviornment[i].groundColor = CP_Color_Create(100, 100, 100, 255);
 	}
 	FILE* levelFile = fopen(levelName, "r");
+	//FILE* levelFile = fopen("level4", "w");
 	float tempNum = 0;
 	if (levelFile == NULL)
 	{
