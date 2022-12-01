@@ -220,6 +220,7 @@ void gamestate_gameplay_update(void)
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
 	ProjectilePhysics(&arrow1);
+	ProjectilePhysics(&arrow2);
 	PlayerInput(&player1, &arrow1, &knife1, &lazer1);
 	PlayerInput(&player2, &arrow2, &knife2, &lazer2);
 	DrawPlayer(player2);
@@ -234,26 +235,26 @@ void gamestate_gameplay_update(void)
 	// all these collisions are broad phase but it doesn't matter too much atm lol
 	// knife coll
 	if (IsColliding(player1.playerX - 14, player1.playerY - 14, player1.playerX + 14, player1.playerY + 14,
-		knife2.knifeX - knife2.knifeOffset, knife2.knifeY - knife2.knifeOffset, knife2.knifeX + knife2.knifeOffset, knife2.knifeY + knife2.knifeOffset) == 1 && knife2.isAnimating == 1)
+		knife2.knifeX - knife2.knifeOffset - 27, knife2.knifeY - knife2.knifeOffset - 27, knife2.knifeX + knife2.knifeOffset + 27, knife2.knifeY + knife2.knifeOffset + 27) == 1 && knife2.isAnimating == 1)
 	{
 		player1.isDead = 1;
 	}
 
 	if (IsColliding(player2.playerX - 14, player2.playerY - 14, player2.playerX + 14, player2.playerY + 14,
-		knife1.knifeX - 35, knife1.knifeY - 35, knife1.knifeX + 35, knife1.knifeY + 35) == 1 && knife1.isAnimating == 1)
+		knife1.knifeX - 50, knife1.knifeY - 50, knife1.knifeX + 50, knife1.knifeY + 50) == 1 && knife1.isAnimating == 1)
 	{
 		player2.isDead = 1;
 	}
 
 	// lazer coll
 	if (IsColliding(player1.playerX - 14, player1.playerY - 14, player1.playerX + 14, player1.playerY + 14,
-		lazer2.lazerX - 5, lazer2.lazerY - 5, lazer2.lazerX + 5, lazer2.lazerY + 5))
+		lazer2.lazerX - 7, lazer2.lazerY - 7, lazer2.lazerX + 7, lazer2.lazerY + 7))
 	{
 		player1.isDead = 1;
 	}
 
 	if (IsColliding(player2.playerX - 14, player2.playerY - 14, player2.playerX + 14, player2.playerY + 14,
-		lazer1.lazerX - 5, lazer1.lazerY - 5, lazer1.lazerX + 5, lazer1.lazerY + 5))
+		lazer1.lazerX - 7, lazer1.lazerY - 7, lazer1.lazerX + 7, lazer1.lazerY + 7))
 	{
 		player2.isDead = 1;
 	}
