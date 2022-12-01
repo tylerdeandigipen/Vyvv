@@ -231,6 +231,8 @@ void gamestate_gameplay_update(void)
 	DisplayWins(&player1, &player2);
 	LevelManager(levels, &player1, &player2, &arrow1, &arrow2);
 	
+	// all these collisions are broad phase but it doesn't matter too much atm lol
+	// knife coll
 	if (IsColliding(player1.playerX - 14, player1.playerY - 14, player1.playerX + 14, player1.playerY + 14,
 		knife2.knifeX - knife2.knifeOffset, knife2.knifeY - knife2.knifeOffset, knife2.knifeX + knife2.knifeOffset, knife2.knifeY + knife2.knifeOffset) == 1 && knife2.isAnimating == 1)
 	{
@@ -252,6 +254,19 @@ void gamestate_gameplay_update(void)
 
 	if (IsColliding(player2.playerX - 14, player2.playerY - 14, player2.playerX + 14, player2.playerY + 14,
 		lazer1.lazerX - 5, lazer1.lazerY - 5, lazer1.lazerX + 5, lazer1.lazerY + 5))
+	{
+		player2.isDead = 1;
+	}
+
+	//arrow coll
+	if (IsColliding(player1.playerX - 14, player1.playerY - 14, player1.playerX + 14, player1.playerY + 14,
+		arrow2.position.x - 5, arrow2.position.y - 5, arrow2.position.x + 5, arrow2.position.y))
+	{
+		player1.isDead = 1;
+	}
+
+	if (IsColliding(player2.playerX - 14, player2.playerY - 14, player2.playerX + 14, player2.playerY + 14,
+		arrow1.position.x - 5, arrow1.position.y - 5, arrow1.position.x + 5, arrow1.position.y + 5))
 	{
 		player2.isDead = 1;
 	}

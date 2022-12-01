@@ -279,7 +279,7 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 {
 	lazer->inMotion = 0;
-	lazer->lazerVelocity = 50 * player->facingDirection;
+	lazer->lazerVelocity = 40 * player->facingDirection;
 	lazer->lazerRadius = 40.0f;
 	lazer->lazerX = player->playerX - 30;
 	lazer->lazerY = player->playerY;
@@ -294,7 +294,14 @@ inline void drawLazer(struct Player* player, struct Lazer* lazer)
 	{
 		lazer->lazerX += lazer->lazerVelocity;
 
-		CP_Graphics_DrawCircle(lazer->lazerX, lazer->lazerY + 10, 10);
+		if (player->facingDirection == 1)
+		{
+			CP_Graphics_DrawCircle(lazer->lazerX, lazer->lazerY + 10, 7);
+		}
+		else if (player->facingDirection == -1)
+		{
+			CP_Graphics_DrawCircle(lazer->lazerX + 80, lazer->lazerY + 10, 7);
+		}
 	}
 }
 
@@ -316,15 +323,15 @@ inline void drawKnife(struct Player* player, struct Knife* knife)
 	if (knife->isAnimating == 1)
 	{
 		knife->knifeTimer += CP_System_GetDt();
-		knife->knifeOffset = CP_Math_LerpFloat(knife->knifeOffset, 23, knife->knifeTimer);
+		knife->knifeOffset = CP_Math_LerpFloat(knife->knifeOffset, 20, knife->knifeTimer);
 
 		if (player->facingDirection == 1)
 		{
-			CP_Graphics_DrawRectAdvanced((knife->knifeX + knife->knifeOffset + 30), knife->knifeY + 7, 5, 25, 90, 0);
+			CP_Graphics_DrawRectAdvanced((knife->knifeX + knife->knifeOffset + 38), knife->knifeY + 7, 5, 30, 90, 0);
 		}
 		else if (player->facingDirection == -1)
 		{
-			CP_Graphics_DrawRectAdvanced((knife->knifeX - knife->knifeOffset + 15), knife->knifeY + 7, 5, 25, 90, 0);
+			CP_Graphics_DrawRectAdvanced((knife->knifeX - knife->knifeOffset + 12), knife->knifeY + 7, 5, 30, 90, 0);
 		}
 
 		if (knife->knifeTimer > 0.3)
@@ -346,7 +353,7 @@ inline void ResetProjectile(struct Arrow* arrow)
 {
 	//reset projectiles
 	arrow->position.x = -1000; //send into space so is not seen
-	arrow->position.y = -1000;
+	arrow->position.y = -1000; // the arrow in da sky, #astronaut 
 	arrow->velocity.x = 0;
 	arrow->velocity.y = 0;
 	arrow->gravity = 0;
