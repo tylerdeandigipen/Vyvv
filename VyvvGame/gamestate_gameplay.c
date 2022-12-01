@@ -220,7 +220,7 @@ void gamestate_gameplay_update(void)
 	Physics(&player2, enviornment);
 	Physics(&player1, enviornment);
 	ProjectilePhysics(&arrow1);
-	ProjectilePhysics(&arrow2);
+	ProjectilePhysics(&arrow2);  
 	PlayerInput(&player1, &arrow1, &knife1, &lazer1);
 	PlayerInput(&player2, &arrow2, &knife2, &lazer2);
 	DrawPlayer(player2);
