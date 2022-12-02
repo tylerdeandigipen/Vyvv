@@ -1,4 +1,6 @@
-﻿  gamestate_menu.c
+﻿  LINK : C:\Users\ma_ho\OneDrive\Documents\GitHub\Vyvv\VyvvGame\x64\Debug\Processing_Sample.exe not found or not built by the last incremental link; performing full link
+gamestate_credits.obj : warning LNK4204: 'C:\Users\ma_ho\OneDrive\Documents\GitHub\Vyvv\VyvvGame\x64\Debug\vc143.pdb' is missing debugging information for referencing module; linking object as if no debug info
+main.obj : warning LNK4204: 'C:\Users\ma_ho\OneDrive\Documents\GitHub\Vyvv\VyvvGame\x64\Debug\vc143.pdb' is missing debugging information for referencing module; linking object as if no debug info
   Processing_Sample.vcxproj -> C:\Users\ma_ho\OneDrive\Documents\GitHub\Vyvv\VyvvGame\x64\Debug\Processing_Sample.exe
   1 File(s) copied
   1 File(s) copied

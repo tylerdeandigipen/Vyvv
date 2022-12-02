@@ -114,7 +114,7 @@ void gamestate_menu_update(void)
 			highlight = 3;
 	}
 	//start
-	if (icon1.buttonRadius/2 > sqrt(((tempX - icon1.iconX) * (tempX - icon1.iconX)) + ((tempY - icon1.iconY) * (tempY - icon1.iconY))) || highlight == 0)
+	if (icon1.buttonRadius / 2 > sqrt(((tempX - icon1.iconX) * (tempX - icon1.iconX)) + ((tempY - icon1.iconY) * (tempY - icon1.iconY))) || highlight == 0)
 	{
 		highlight = 0;
 		icon1.highlighterR = 120;
@@ -152,7 +152,7 @@ void gamestate_menu_update(void)
 	{
 		if (!CP_Input_GamepadConnected())
 			highlight = -1;
-		else 
+		else
 			highlight = highlight;
 		icon2.highlighterR = 255;
 		icon2.highlighterG = 180;
@@ -162,7 +162,7 @@ void gamestate_menu_update(void)
 		icon2.blue = 255;
 	}
 	//cred
-	if (icon3.buttonRadius/2 > sqrt (((tempX - icon3.iconX) * (tempX - icon3.iconX)) + ((tempY - icon3.iconY) * (tempY - icon3.iconY))) || highlight == 2)
+	if (icon3.buttonRadius / 2 > sqrt(((tempX - icon3.iconX) * (tempX - icon3.iconX)) + ((tempY - icon3.iconY) * (tempY - icon3.iconY))) || highlight == 2)
 	{
 		highlight = 2;
 		icon3.highlighterR = 120;
