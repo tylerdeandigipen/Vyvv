@@ -19,12 +19,16 @@
 
 struct Lazer
 {
+	int isShooting; 
 	float lazerVelocity;
 	float lazerY;
 	float lazerX;
 	float lazerRadius;
 
 	int inMotion;
+	// sorry tyler im stealing ur code heheheheh
+	float maxLimitX; //right walls
+	float minLimitX; //left walls
 };
 struct Knife
 {
@@ -82,6 +86,7 @@ struct Player
 	CP_KEY attack;
 
 	//controller bits
+	int number;
 	CP_Vector leftStick;
 	float rightTrigger;
 };
@@ -279,10 +284,12 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 {
 	lazer->inMotion = 0;
-	lazer->lazerVelocity = 40 * player->facingDirection;
+	lazer->lazerVelocity = 20 * player->facingDirection;
 	lazer->lazerRadius = 40.0f;
 	lazer->lazerX = player->playerX - 30;
 	lazer->lazerY = player->playerY;
+	lazer->maxLimitX = 900;
+	lazer->minLimitX = -300;
 }
 
 inline void drawLazer(struct Player* player, struct Lazer* lazer)
@@ -302,6 +309,16 @@ inline void drawLazer(struct Player* player, struct Lazer* lazer)
 		{
 			CP_Graphics_DrawCircle(lazer->lazerX + 80, lazer->lazerY + 10, 7);
 		}
+	}
+
+	if (lazer->lazerX >= lazer->maxLimitX)
+	{
+		lazer->inMotion = 0;
+	}
+
+	if (lazer->lazerX <= lazer->minLimitX)
+	{
+		lazer->inMotion = 0;
 	}
 }
 
@@ -464,7 +481,7 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife
 		{
 			player->playerVelocity.x = player->playerVelocity.x * .4f;
 		}
-		if (player->rightTrigger == 1)
+		if (CP_Input_GamepadTriggeredAdvanced(player->attack, player->number))
 		{
 			Attack(player, arrow, knife, lazer);
 		}
@@ -502,7 +519,7 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife
 		{
 			player->playerVelocity.x = player->playerVelocity.x * .4f;
 		}
-		if (CP_Input_KeyDown(player->attack))
+		if (CP_Input_KeyTriggered(player->attack))
 		{
 			Attack(player, arrow, knife, lazer);
 		}

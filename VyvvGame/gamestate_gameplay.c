@@ -191,9 +191,11 @@ void gamestate_gameplay_update(void)
 {
 	if (CP_Input_GamepadConnectedAdvanced(0))
 	{
+		player1.attack = GAMEPAD_X;
 		player1.leftStick = CP_Input_GamepadLeftStickAdvanced(0);
 		player1.jump = CP_Input_GamepadDown(GAMEPAD_A);
 		player1.rightTrigger = CP_Input_GamepadRightTriggerAdvanced(0);
+		player1.number = 0;
 	}
 	else
 	{
@@ -202,12 +204,13 @@ void gamestate_gameplay_update(void)
 		player1.jump = KEY_W;
 		player1.attack = KEY_E;
 	}
-
 	if (CP_Input_GamepadConnectedAdvanced(1))
 	{
+		player2.attack = GAMEPAD_X;
 		player2.leftStick = CP_Input_GamepadLeftStickAdvanced(1);
 		player2.jump = CP_Input_GamepadDownAdvanced(GAMEPAD_A, 1);
 		player2.rightTrigger = CP_Input_GamepadRightTriggerAdvanced(1);
+		player2.number = 1;
 	}
 	else
 	{
@@ -233,6 +236,31 @@ void gamestate_gameplay_update(void)
 	LevelManager(levels, &player1, &player2, &arrow1, &arrow2);
 	
 	// all these collisions are broad phase but it doesn't matter too much atm lol
+	
+	for (int i = 0; i < 20; i++)
+	{
+		if (lazer1.inMotion == 1)
+		{
+			if (IsColliding(lazer1.lazerX, lazer1.lazerY , lazer1.lazerX, lazer1.lazerY,
+				enviornment[i].topLeftCorner.x - 8, enviornment[i].topLeftCorner.y, enviornment[i].bottomRightCorner.x - 48, enviornment[i].bottomRightCorner.y))
+			{
+				lazer1.inMotion = 0;
+			}
+		}
+	}
+	for (int i = 0; i < 20; i++)
+	{
+		if (lazer2.inMotion == 1)
+		{
+			if (IsColliding(lazer2.lazerX, lazer2.lazerY, lazer2.lazerX, lazer2.lazerY,
+				enviornment[i].topLeftCorner.x - 8, enviornment[i].topLeftCorner.y, enviornment[i].bottomRightCorner.x - 48, enviornment[i].bottomRightCorner.y))
+			{
+				lazer2.inMotion = 0;
+			}
+
+		}
+	}
+
 	// knife coll
 	if (IsColliding(player1.playerX - 14, player1.playerY - 14, player1.playerX + 14, player1.playerY + 14,
 		knife2.knifeX - knife2.knifeOffset - 27, knife2.knifeY - knife2.knifeOffset - 27, knife2.knifeX + knife2.knifeOffset + 27, knife2.knifeY + knife2.knifeOffset + 27) == 1 && knife2.isAnimating == 1)
@@ -290,7 +318,6 @@ void gamestate_gameplay_update(void)
 	{
 		CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
 	}
-
 }
 
 void gamestate_gameplay_exit(void)
