@@ -22,10 +22,12 @@
 
 int highlight;
 struct MenuIcons icon1, icon2, icon3, icon4;
+CP_Sound select;
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
 void gamestate_menu_init(void)
 {
+	select = CP_Sound_Load("./Assets/blipSelect.wav");
 	if (!CP_Input_GamepadConnected())
 		highlight = -1;
 	else
@@ -73,9 +75,15 @@ void gamestate_menu_update(void)
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_LEFT))
 			highlight = 0;
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_RIGHT))
+		{
+			CP_Sound_Play(select);
 			highlight = 1;
+		}
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_DOWN))
+		{
+			CP_Sound_Play(select);
 			highlight = 2;
+		}
 	}
 
 	if (highlight == 1)
@@ -83,21 +91,33 @@ void gamestate_menu_update(void)
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
 			highlight = 1;
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_LEFT))
+		{
+			CP_Sound_Play(select);
 			highlight = 0;
+		}
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_RIGHT))
 			highlight = 1;
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_DOWN))
+		{
+			CP_Sound_Play(select);
 			highlight = 3;
+		}
 	}
 
 	if (highlight == 2)
 	{
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
+		{
+			CP_Sound_Play(select);
 			highlight = 0;
+		}
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_LEFT))
 			highlight = 2;
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_RIGHT))
+		{
+			CP_Sound_Play(select);
 			highlight = 3;
+		}
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_DOWN))
 			highlight = 2;
 	}
@@ -105,9 +125,15 @@ void gamestate_menu_update(void)
 	if (highlight == 3)
 	{
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
+		{
+			CP_Sound_Play(select);
 			highlight = 1;
+		}
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_LEFT))
+		{
+			CP_Sound_Play(select);
 			highlight = 2;
+		}
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_RIGHT))
 			highlight = 3;
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_DOWN))
@@ -247,5 +273,6 @@ void gamestate_menu_update(void)
 // this function will be called once just before leaving the current gamestate
 void gamestate_menu_exit(void)
 {
+	CP_Sound_Free(&select);
 	// shut down the gamestate and cleanup any dynamic memory
 }

@@ -39,7 +39,7 @@ void gamestate_credits_update(void)
 	{
 		CP_Settings_TextSize(20.0f);
 		char buffer[500] = { 0 };
-		sprintf_s(buffer, _countof(buffer), "Credits: Made by Tyler Dean, Instructed by Andy Ellinger");
+		sprintf_s(buffer, _countof(buffer), "Credits: Made by Tyler Dean  Michael Howard  TayLee Young, Instructed by Andy Ellinger");
 		CP_Font_DrawText(buffer, 1, 15);
 		sprintf_s(buffer, _countof(buffer), "All content Copyright 2022 DigiPen (USA) Corporation, all rights reserved.");
 		CP_Font_DrawText(buffer, 1, 40);

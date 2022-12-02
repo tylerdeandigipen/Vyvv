@@ -20,6 +20,7 @@
 #include "gamestate_credits.h"
 #pragma warning(disable:4996)
 CP_Color bgColor;
+CP_Sound jump;
 float globalXOffset = 0;
 float globalYOffset = 0;
 struct Box enviornment[20];
@@ -322,5 +323,6 @@ void gamestate_gameplay_update(void)
 
 void gamestate_gameplay_exit(void)
 {
+	CP_Sound_Free(&jump);
 	// shut down the gamestate and cleanup any dynamic memory
 }

@@ -10,6 +10,8 @@
 //
 // Copyright © 2020 DigiPen, All rights reserved.
 //---------------------------------------------------------
+#include "gamestate_orangewins.h"
+#include "gamestate_purplewins.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -448,10 +450,13 @@ inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* kni
 inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
 {
 	float moveSpeed = 7;
+	CP_Sound jump;
+	jump = CP_Sound_Load("./Assets/boxJump.wav");
 	if (CP_Input_GamepadConnectedAdvanced(0) || CP_Input_GamepadConnectedAdvanced(1))
 	{
 		if (player->jump == 1 && player->hasJump == 1)
 		{
+			CP_Sound_Play(jump);
 			player->playerVelocity.y = -17;
 			player->hasJump = 0;
 		}
@@ -490,6 +495,7 @@ inline void PlayerInput(struct Player* player, struct Arrow* arrow, struct Knife
 	{
 		if ((CP_Input_KeyDown(player->jump) && player->hasJump == 1))
 		{
+			CP_Sound_Play(jump);
 			player->playerVelocity.y = -17;
 			player->hasJump = 0;
 		}
@@ -558,7 +564,7 @@ inline void LevelManager(char levels[20][20], struct Player* player1, struct Pla
 			if (player1->deaths >= winThreshold)
 			{
 				//player 2 wins
-				CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
+				CP_Engine_SetNextGameStateForced(gamestate_orange_init, gamestate_orange_update, gamestate_orange_exit);
 			}
 		}
 		if (player2->isDead == 1)
@@ -568,7 +574,7 @@ inline void LevelManager(char levels[20][20], struct Player* player1, struct Pla
 			if (player2->deaths >= winThreshold)
 			{
 				//player 1 wins
-				CP_Engine_SetNextGameStateForced(gamestate_gameplay_init, gamestate_gameplay_update, gamestate_gameplay_exit);
+				CP_Engine_SetNextGameStateForced(gamestate_purple_init, gamestate_purple_update, gamestate_purple_exit);
 			}
 		}
 		RandomizeLevelAndPowerup(levels, player1, player2, arrow1, arrow2);
