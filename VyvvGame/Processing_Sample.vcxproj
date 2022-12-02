@@ -198,6 +198,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     <ClCompile Include="gamestate_gameplay.c" />
     <ClCompile Include="gamestate_menu.c" />
     <ClCompile Include="gamestate_splash.c" />
+    <ClCompile Include="gamestate_tutorial.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +206,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     <ClInclude Include="gamestate_gameplay.h" />
     <ClInclude Include="gamestate_menu.h" />
     <ClInclude Include="gamestate_splash.h" />
+    <ClInclude Include="gamestate_tutorial.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="level.txt" />

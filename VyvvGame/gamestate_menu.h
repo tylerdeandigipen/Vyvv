@@ -12,7 +12,43 @@
 //---------------------------------------------------------
 
 #pragma once
+struct MenuIcons
+{
+	CP_Color lineColor;
+	CP_Color fillColor;
+	float iconX;
+	float iconY;
+	float buttonRadius;
+	int red;
+	int green;
+	int blue;
+	int highlighterR;
+	int highlighterG;
+	int highlighterB;
+
+};
 
 void gamestate_menu_init(void);
 void gamestate_menu_update(void);
 void gamestate_menu_exit(void);
+
+inline void initialize_icons(struct MenuIcons* icon)
+{
+	icon->iconX = 300;
+	icon->iconY = 200;
+	icon->red = 120;
+	icon->green = 120;
+	icon->blue = 255;
+	icon->buttonRadius = 100;
+	icon->highlighterR = 15;
+	icon->highlighterG = 150;
+	icon->highlighterB = 167;
+
+}
+inline void DrawIcons(struct MenuIcons* icon)
+{
+	CP_Settings_Fill(icon->fillColor);
+	CP_Settings_Stroke(icon->lineColor);
+	CP_Settings_StrokeWeight(5.0f);
+	CP_Graphics_DrawCircle(icon->iconX, icon->iconY, icon->buttonRadius);
+}

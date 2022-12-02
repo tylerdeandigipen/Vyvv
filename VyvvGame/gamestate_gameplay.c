@@ -277,6 +277,11 @@ void gamestate_gameplay_update(void)
 	{
 		player1.isDead = 1;
 	}
+	//DrawDebugText();
+	if (CP_Input_KeyDown(KEY_ESCAPE))
+	{
+		CP_Engine_Terminate();
+	}
 	if (CP_Input_KeyDown(KEY_G))
 	{
 		player2.isDead = 1;

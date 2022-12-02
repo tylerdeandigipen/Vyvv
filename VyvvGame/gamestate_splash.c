@@ -21,7 +21,7 @@ CP_Image digiLogo;
 void gamestate_splash_init(void)
 {
 	digiLogo = CP_Image_Load("./Assets/DigiPen_BLACK.png");
-	bgColor = CP_Color_Create(130, 10, 150, 255);
+	bgColor = CP_Color_Create(100, 100, 100, 255);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
 float timer = 0;
