@@ -1,7 +1,4 @@
-﻿  gamestate_gameplay.c
-  gamestate_menu.c
-  gamestate_orangewins.c
-  gamestate_purplewins.c
+﻿  gamestate_splash.c
   Processing_Sample.vcxproj -> C:\Users\young\OneDrive\Documents\GitHub\Vyvv\VyvvGame\x64\Debug\Processing_Sample.exe
   1 File(s) copied
   1 File(s) copied
