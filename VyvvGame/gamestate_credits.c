@@ -1,14 +1,15 @@
 //---------------------------------------------------------
 // file:	gamestate_credits.c
-// author:	tyler dean
+// author:	tyler dean, Michael Howard
 // email:	tyler.dean@digipen.edu
-//
+//			michael.howard@digipen.edu
+// 
 // brief: credits scene
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright © 2020 DigiPen, All rights reserved.
+// Copyright © 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #include "cprocessing.h"
 #include "gamestate_menu.h"
@@ -41,8 +42,14 @@ void gamestate_credits_update(void)
 		char buffer[500] = { 0 };
 		sprintf_s(buffer, _countof(buffer), "Credits: Made by Tyler Dean  Michael Howard  TayLee Young, Instructed by Andy Ellinger");
 		CP_Font_DrawText(buffer, 1, 15);
-		sprintf_s(buffer, _countof(buffer), "All content Copyright 2022 DigiPen (USA) Corporation, all rights reserved.");
+		sprintf_s(buffer, _countof(buffer), "Instructed by Andy Ellinger");
 		CP_Font_DrawText(buffer, 1, 40);
+		sprintf_s(buffer, _countof(buffer), "President: Claude Comair");
+		CP_Font_DrawText(buffer, 1, 65);
+		sprintf_s(buffer, _countof(buffer), "Made with FMOD Studio by Firelight Technologies Pty Ltd.");
+		CP_Font_DrawText(buffer, 1, 90);
+		sprintf_s(buffer, _countof(buffer), "All content Copyright 2022 DigiPen (USA) Corporation, all rights reserved.");
+		CP_Font_DrawText(buffer, 1, 115);
 	}
 	timer2 += CP_System_GetDt();
 }

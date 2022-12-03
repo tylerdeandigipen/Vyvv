@@ -1,14 +1,15 @@
 //---------------------------------------------------------
 // file:	gamestate_menu.c
-// author:	tyler dean
-// email:	tyler.dean@digipen.edu
+// authors:	tyler dean, Michael Howard
+// email:	tyler.dean@digipen.edu 
+//			michael.howard@digipen.edu
 //
 // brief:	Main menu file
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright © 2020 DigiPen, All rights reserved.
+// Copyright © 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "cprocessing.h"
@@ -20,13 +21,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//helps with controller input
 int highlight;
+//to add more icons add number and make changes accordingly
 struct MenuIcons icon1, icon2, icon3, icon4;
 CP_Sound select;
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
 void gamestate_menu_init(void)
 {
+
 	select = CP_Sound_Load("./Assets/blipSelect.wav");
 	if (!CP_Input_GamepadConnected())
 		highlight = -1;
@@ -45,6 +49,9 @@ void gamestate_menu_init(void)
 // this function will be called repeatedly every frame
 void gamestate_menu_update(void)
 {
+	double tempX = CP_Input_GetMouseX();
+	double tempY = CP_Input_GetMouseY();
+	//make icons
 	icon1.iconX = 200;
 	icon1.iconY = 300;
 	icon1.fillColor = CP_Color_Create(icon1.red, icon1.green, icon1.blue, 255);
@@ -66,8 +73,9 @@ void gamestate_menu_update(void)
 	DrawIcons(&icon3);
 	DrawIcons(&icon4);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-	double tempX = CP_Input_GetMouseX();
-	double tempY = CP_Input_GetMouseY();
+
+	
+	//navigate menu with controller
 	if (highlight == 0)
 	{
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
@@ -85,7 +93,6 @@ void gamestate_menu_update(void)
 			highlight = 2;
 		}
 	}
-
 	if (highlight == 1)
 	{
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
@@ -103,7 +110,6 @@ void gamestate_menu_update(void)
 			highlight = 3;
 		}
 	}
-
 	if (highlight == 2)
 	{
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
@@ -121,7 +127,6 @@ void gamestate_menu_update(void)
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_DOWN))
 			highlight = 2;
 	}
-
 	if (highlight == 3)
 	{
 		if (CP_Input_GamepadTriggered(GAMEPAD_DPAD_UP))
@@ -140,6 +145,7 @@ void gamestate_menu_update(void)
 			highlight = 3;
 	}
 	//start
+	//highlight icons
 	if (icon1.buttonRadius / 2 > sqrt(((tempX - icon1.iconX) * (tempX - icon1.iconX)) + ((tempY - icon1.iconY) * (tempY - icon1.iconY))) || highlight == 0)
 	{
 		highlight = 0;
@@ -211,7 +217,7 @@ void gamestate_menu_update(void)
 		icon3.green = 120;
 		icon3.blue = 255;
 	}
-	//ded
+	//ded(exit)
 	if (icon4.buttonRadius / 2 > sqrt(((tempX - icon4.iconX) * (tempX - icon4.iconX)) + ((tempY - icon4.iconY) * (tempY - icon4.iconY))) || highlight == 3)
 	{
 		highlight = 3;
@@ -245,11 +251,12 @@ void gamestate_menu_update(void)
 	{
 		CP_Engine_SetNextGameStateForced(gamestate_tutorial_init, gamestate_tutorial_update, gamestate_tutorial_exit);
 	}
+	//cred
 	if (((highlight == 2 && CP_Input_GamepadDown(GAMEPAD_A))) || (CP_Input_KeyDown(KEY_SPACE)) && (icon3.buttonRadius / 2 > sqrt(((tempX - icon3.iconX) * (tempX - icon3.iconX)) + ((tempY - icon3.iconY) * (tempY - icon3.iconY)))))
 	{
 		CP_Engine_SetNextGameStateForced(gamestate_credits_init, gamestate_credits_update, gamestate_credits_exit);
 	}
-	//ded
+	//ded(exit)
 	if (CP_Input_KeyTriggered(KEY_ESCAPE) || (highlight == 3 && CP_Input_GamepadDown(GAMEPAD_A)) || (CP_Input_KeyDown(KEY_SPACE) && (icon4.buttonRadius / 2 > sqrt(((tempX - icon4.iconX) * (tempX - icon4.iconX)) + ((tempY - icon4.iconY) * (tempY - icon4.iconY))))))
 	{
 		CP_Engine_Terminate();

@@ -1,14 +1,14 @@
 //---------------------------------------------------------
-// file:	gamestate_credits.c
-// author:	tyler dean
-// email:	tyler.dean@digipen.edu
+// file:	gamestate_tutorial.c
+// author:	Michael Howard
+// email:	michael.howard@digipen.edu
 //
-// brief: credits scene
+// brief: tutorial scene
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright © 2020 DigiPen, All rights reserved.
+// Copyright © 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #include "cprocessing.h"
 #include "gamestate_menu.h"
@@ -45,7 +45,7 @@ void gamestate_tutorial_update(void)
 		CP_Font_DrawText(buffer, 1, 45);
 		sprintf_s(buffer, _countof(buffer), "JUMP GAMEPAD A UPARROW W");
 		CP_Font_DrawText(buffer, 1, 75);
-		sprintf_s(buffer, _countof(buffer), "ATTACK E DOWNARROW GAMEPAD RIGHT TRIGGER");
+		sprintf_s(buffer, _countof(buffer), "ATTACK E DOWNARROW GAMEPAD X");
 		CP_Font_DrawText(buffer, 1, 105);
 	}
 	timer3 += CP_System_GetDt();

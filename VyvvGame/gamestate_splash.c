@@ -1,14 +1,15 @@
 //---------------------------------------------------------
 // file:	gamestate_splash.c
-// author:	tyler dean
+// author:	tyler dean, michael howard
 // email:	tyler.dean@digipen.edu
+//			michael.howard@digipen.edu
 //
 // brief:	Splash screen
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright © 2020 DigiPen, All rights reserved.
+// Copyright © 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "cprocessing.h"

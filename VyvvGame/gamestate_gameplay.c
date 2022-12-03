@@ -1,14 +1,16 @@
 //---------------------------------------------------------
 // file:	gamestate_gameplay.c
-// author:	tyler dean
+// author:	tyler dean michael howard taylee young
 // email:	tyler.dean@digipen.edu
+//			michael.howard@digipen.edu
+//			taylee.young@digipen.edu
 //
 // brief:	Main gameplay file
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright © 2020 DigiPen, All rights reserved.
+// Copyright © 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "cprocessing.h"
@@ -20,6 +22,7 @@
 #include "gamestate_credits.h"
 #pragma warning(disable:4996)
 CP_Color bgColor;
+CP_Sound laser;
 CP_Sound jump;
 float globalXOffset = 0;
 float globalYOffset = 0;
@@ -138,6 +141,8 @@ void gamestate_gameplay_init(void)
 {
 	ResetProjectile(&arrow1);
 	ResetProjectile(&arrow2);
+	hideLazer(&player1, &lazer1);
+	hideLazer(&player1, &lazer2);
 	srand(1);
 	bgColor = CP_Color_Create(160, 160, 250, 255);
 	//reset deaths
@@ -234,7 +239,7 @@ void gamestate_gameplay_update(void)
 	drawLazer(&player1, &lazer1);
 	drawLazer(&player2, &lazer2);
 	DisplayWins(&player1, &player2);
-	LevelManager(levels, &player1, &player2, &arrow1, &arrow2);
+	LevelManager(levels, &player1, &player2, &arrow1, &arrow2, &lazer1, &lazer2);
 	
 	// all these collisions are broad phase but it doesn't matter too much atm lol
 	
@@ -324,5 +329,6 @@ void gamestate_gameplay_update(void)
 void gamestate_gameplay_exit(void)
 {
 	CP_Sound_Free(&jump);
+	CP_Sound_Free(&laser);
 	// shut down the gamestate and cleanup any dynamic memory
 }

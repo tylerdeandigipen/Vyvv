@@ -1,22 +1,20 @@
 //---------------------------------------------------------
-// file:	gamestate_template.c
-// author:	[NAME]
-// email:	[DIGIPEN EMAIL ADDRESS]
+// file:	gamestate_purplewins.c
+// author:	Michael Howard
+// email:	michael.howard@digipen.edu
 //
-// brief:	template file for holding gamestate functions
+// brief:	purple win screen
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright � 2020 DigiPen, All rights reserved.
+// Copyright � 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "cprocessing.h"
 #include "gamestate_gameplay.h"
 #include "gamestate_menu.h"
 #include "gamestate_purplewins.h"
-// use CP_Engine_SetNextGameState to specify this function as the initialization function
-// this function will be called once at the beginning of the program
 CP_Color bgColor;
 float timer5 = 0;
 void gamestate_purple_init(void)
@@ -25,9 +23,6 @@ void gamestate_purple_init(void)
 	bgColor = CP_Color_Create(100, 100, 100, 255);
 	CP_Graphics_ClearBackground(bgColor);
 }
-
-// use CP_Engine_SetNextGameState to specify this function as the update function
-// this function will be called repeatedly every frame
 void gamestate_purple_update(void)
 {
 	CP_Graphics_ClearBackground(bgColor);

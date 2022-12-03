@@ -1,14 +1,14 @@
 //---------------------------------------------------------
-// file:	gamestate_template.c
-// author:	[NAME]
-// email:	[DIGIPEN EMAIL ADDRESS]
+// file:	gamestate_orangewins.c
+// author:	Michael Howard
+// email:	michael.howard@digipen.edu
 //
-// brief:	template file for holding gamestate functions
+// brief:	orange win screen
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright � 2020 DigiPen, All rights reserved.
+// Copyright � 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "cprocessing.h"

@@ -1,8 +1,9 @@
 //---------------------------------------------------------
 // file:	gamestate_menu.h
-// author:	tyler dean
+// author:	tyler dean, michael howard
 // email:	tyler.dean@digipen.edu
-//
+//			michael.howard@didipen.edu
+// 
 // brief:	menu helper file
 //
 // documentation link:
@@ -12,6 +13,7 @@
 //---------------------------------------------------------
 
 #pragma once
+//use this to add more icons
 struct MenuIcons
 {
 	CP_Color lineColor;
@@ -31,7 +33,7 @@ struct MenuIcons
 void gamestate_menu_init(void);
 void gamestate_menu_update(void);
 void gamestate_menu_exit(void);
-
+//initialize icons
 inline void initialize_icons(struct MenuIcons* icon)
 {
 	icon->iconX = 300;
@@ -39,12 +41,13 @@ inline void initialize_icons(struct MenuIcons* icon)
 	icon->red = 120;
 	icon->green = 120;
 	icon->blue = 255;
+	//outline color
 	icon->buttonRadius = 100;
 	icon->highlighterR = 15;
 	icon->highlighterG = 150;
 	icon->highlighterB = 167;
-
 }
+//draw icons
 inline void DrawIcons(struct MenuIcons* icon)
 {
 	CP_Settings_Fill(icon->fillColor);

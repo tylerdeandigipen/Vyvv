@@ -1,14 +1,16 @@
 //---------------------------------------------------------
 // file:	gamestate_gameplay.h
-// author:	tyler dean
+// author:	tyler dean michael howard taylee young
 // email:	tyler.dean@digipen.edu
-//
+//			michael.howard@digipen.edu
+//			taylee.young@digipen.edu
+// 
 // brief:	gameplay helper file
 //
 // documentation link:
 // https://github.com/DigiPen-Faculty/CProcessing/wiki
 //
-// Copyright © 2020 DigiPen, All rights reserved.
+// Copyright © 2022 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #include "gamestate_orangewins.h"
 #include "gamestate_purplewins.h"
@@ -276,13 +278,6 @@ inline void SpawnProjectile(struct Player* player, struct Arrow* arrow)
 	arrow->gravity = 2;
 }
 
-/*inline void initializeControllers(struct Controllers* controller)
-{
-	player->leftStick = CP_Input_GamepadLeftStickAdvanced(0);
-	controller->buttonA = GAMEPAD_A;
-	controller->rightTrigger = ;
-}*/
-
 inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 {
 	lazer->inMotion = 0;
@@ -293,12 +288,21 @@ inline void initalizeLazer(struct Player* player, struct Lazer* lazer)
 	lazer->maxLimitX = 900;
 	lazer->minLimitX = -300;
 }
+inline void hideLazer(struct Player* player, struct Lazer* lazer)
+{
+	lazer->inMotion = 1;
+	lazer->lazerVelocity = 0;
+	lazer->lazerRadius = 0.0f;
+	lazer->lazerX = 1000;
+	lazer->lazerY = 1000;
+	lazer->maxLimitX = 900;
+	lazer->minLimitX = -300;
+}
 
 inline void drawLazer(struct Player* player, struct Lazer* lazer)
 {
 	CP_Settings_NoStroke();
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-
 	if (lazer->inMotion == 1)
 	{
 		lazer->lazerX += lazer->lazerVelocity;
@@ -429,17 +433,21 @@ inline void DrawEnviornment(CP_Color bgColor)
 
 inline void Attack(struct Player* player, struct Arrow* arrow, struct Knife* knife, struct Lazer* lazer)
 {
+	CP_Sound laser;
+	laser = CP_Sound_Load("./Assets/laser.wav");
 	switch (player->currentPowerup)
 	{
 		case 0:
 			break;
 		case 1:
+			CP_Sound_Play(laser);
 			SpawnProjectile(player, arrow);
 			break;
 		case 2:
 			knife->isAnimating = 1;
 			break;
 		case 3:
+			CP_Sound_Play(laser);
 			initalizeLazer(player, lazer);
 			lazer->inMotion = 1;
 			break;
@@ -552,7 +560,7 @@ inline void DisplayWins(struct Player* player1, struct Player* player2)
 	sprintf_s(buffer, _countof(buffer), "Orange Wins: %i", player1->deaths);
 	CP_Font_DrawText(buffer, 1, 35);
 };
-inline void LevelManager(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2)
+inline void LevelManager(char levels[20][20], struct Player* player1, struct Player* player2, struct Arrow* arrow1, struct Arrow* arrow2, struct Lazer* lazer1, struct Lazer* lazer2)
 {
 	if (player1->isDead == 1 || player2->isDead == 1)
 	{
@@ -561,6 +569,10 @@ inline void LevelManager(char levels[20][20], struct Player* player1, struct Pla
 		{
 			player1->deaths += 1;
 			player1->isDead = 0;
+			ResetProjectile(arrow1);
+			ResetProjectile(arrow2);
+			hideLazer(player1, lazer1);
+			hideLazer(player1, lazer2);
 			if (player1->deaths >= winThreshold)
 			{
 				//player 2 wins
@@ -571,6 +583,10 @@ inline void LevelManager(char levels[20][20], struct Player* player1, struct Pla
 		{
 			player2->deaths += 1;
 			player2->isDead = 0;
+			ResetProjectile(arrow1);
+			ResetProjectile(arrow2);
+			hideLazer(player1, lazer1);
+			hideLazer(player1, lazer2);
 			if (player2->deaths >= winThreshold)
 			{
 				//player 1 wins
